@@ -10,7 +10,7 @@ app.use(cors());
 const users = [];
 
 function checksExistsUserAccount(request, response, next) {
-  const { username } = request.header;
+  const { username }  = request.headers;
 
   const user = users.find(user => user.username === username);
   
@@ -24,15 +24,24 @@ function checksExistsUserAccount(request, response, next) {
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  const { user } = request;
+  
+  if(user.pro === false && user.todos <= 9 || user.pro === true){
+    next();
+  }
+
+  if(user.pro === false && user.todos === 9) {
+    return response.status(403).json({ error: "User already have ten todos!" });
+  }
+
 }
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
+  
 }
 
 function findUserById(request, response, next) {
-  // Complete aqui
+  
 }
 
 app.post('/users', (request, response) => {
