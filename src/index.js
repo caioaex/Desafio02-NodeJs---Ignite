@@ -25,12 +25,12 @@ function checksExistsUserAccount(request, response, next) {
 
 function checksCreateTodosUserAvailability(request, response, next) {
   const { user } = request;
-  
+
   if(user.pro === false && user.todos <= 9 || user.pro === true){
     next();
   }
 
-  if(user.pro === false && user.todos === 9) {
+  if(user.pro === false && user.todos.length >= 9) {
     return response.status(403).json({ error: "User already have ten todos!" });
   }
 
