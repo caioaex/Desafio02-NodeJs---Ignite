@@ -37,11 +37,48 @@ function checksCreateTodosUserAvailability(request, response, next) {
 }
 
 function checksTodoExists(request, response, next) {
+  const { username } = request.headers;
+  const { id } = request.params; 
+
+  const user = users.find(user => user.username === username);
+
+  if(!user) {
+    return response.status(404).json({ error: "User not found!!" });
+  }
+
+  const todo = user.todos.find(todo => todo.id === id);
+  
+  // Validar se o id é ou n um uuid
+  if(!validate(id)) {
+    return response.status(400).json({ error: "Id is not a uuid!!" });
+  }
+
+  if(!todo) {
+    return response.status(404).json({ error: "Todo not exists!!" });
+  }
+
+ //Todo falta fazer a validação do id n sendo um uuid!
+
+
+  request.todo = todo;
+  request.user = user;
+
+  next();
   
 }
 
 function findUserById(request, response, next) {
+  const { id } = request.params;
   
+  const user = users.find(user => user.id === id);
+
+  if(!user) {
+    return response.status(404).json({ error: "Id not belong to any user!" })
+  }
+
+  request.user = user;
+
+  next();
 }
 
 app.post('/users', (request, response) => {
